@@ -1,54 +1,47 @@
-# Twoconts.com — Starter Website
+# TwoConts — Istanbul, from two continents
 
-A complete, responsive static starter for a Turkey travel publication.
-
-## Included
-
-- Homepage
-- Destination hub
-- Stories / journal
-- Full Istanbul feature article template
-- About page
-- Contact page
-- Responsive mobile navigation
-- Newsletter and contact form front-end states
-- SEO titles/descriptions
-- Custom SVG visual placeholders
-- No build step required
-
-## Deploy
-
-Upload the entire folder to any static host:
-- Netlify
-- Vercel
-- Cloudflare Pages
-- GitHub Pages
-- Any normal web host / cPanel
-
-The website is plain HTML/CSS/JS, so there is no `npm install` or build command.
-
-## Before launch
-
-1. Replace the SVG visual placeholders in `assets/img/` with your own licensed Turkey photography.
-2. Connect the newsletter form to your email provider.
-3. Connect the contact form to Formspree, Netlify Forms, a serverless function, or your own backend.
-4. Add favicon and social sharing image.
-5. Add Google Analytics / Plausible if wanted.
-6. Add a privacy policy and cookie notice if your analytics/marketing setup requires them.
-
-## Suggested content structure
+A focused, responsive static guide to Istanbul. The site guides visitors through:
 
 ```
-twoconts-starter/
-├── index.html
-├── destinations.html
-├── articles.html
-├── article-istanbul.html
-├── about.html
-├── contact.html
-├── README.md
-└── assets/
-    ├── css/style.css
-    ├── js/main.js
-    └── img/
+Istanbul → European / Asian side → area → category → TwoConts recommendations
 ```
+
+## What changed
+
+- The homepage is now a TwoConts Istanbul guide rather than a general Turkey travel blog.
+- Visitors can switch between the European and Asian sides, then choose an area.
+- Category filters are ready for Food, Cafés, Culture, Nightlife, Hidden Places, Bosphorus, and Shopping.
+- Recommendations are data-driven, so adding a place does not require changing the page layout.
+
+## Add a recommendation
+
+Open `assets/js/twoconts-data.js` and add an item to the `places` list:
+
+```js
+{
+  id: "unique-place-id",
+  side: "europe",
+  area: "karakoy",
+  category: "cafes",
+  name: "Place name",
+  kicker: "A short useful label",
+  description: "Why TwoConts recommends it.",
+  tip: "A helpful local tip",
+  image: "assets/img/your-photo.jpg"
+}
+```
+
+The site will automatically put it in the correct side, area, and category.
+
+## Main files
+
+- `index.html` — homepage
+- `assets/css/twoconts.css` — focused TwoConts design
+- `assets/js/twoconts-data.js` — areas, categories, and recommendations
+- `assets/js/twoconts.js` — interactive guide behaviour
+
+## Publishing
+
+This repository contains the completed site version. The current Cloudflare Pages project is configured as a direct upload, rather than a GitHub-connected Pages project, so GitHub commits do not automatically publish it.
+
+To make future updates publish automatically, create a Git-connected Cloudflare Pages project using this repository and set `main` as the production branch. For a one-time direct update, deploy the repository folder to the existing `twocontinents` Pages project with Wrangler.
