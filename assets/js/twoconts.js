@@ -160,29 +160,53 @@
   const count = frame.querySelector("[data-hero-count]");
   const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let index = 0, paused = motion.matches, timer = null, request = 0;
+  const failed = new Set();
+  // Eagerly load the small slideshow images so hidden slides are ready.
+  slides.forEach(slide => { slide.querySelector("img").loading = "eager"; });
   function schedule() {
     window.clearInterval(timer);
     timer = null;
     pause.textContent = paused ? "Play" : "Pause";
     pause.setAttribute("aria-label", paused ? "Play photo slideshow" : "Pause photo slideshow");
-    if (!paused && !document.hidden) timer = window.setInterval(() => show(index + 1), 5500);
+    if (!paused && !document.hidden) timer = window.setInterval(() => show(index + 1, 1), 5500);
   }
-  async function show(target) {
+  async function ready(img) {
+    if (img.complete) return img.naturalWidth > 0;
+    return new Promise(resolve => {
+      let timeout;
+      const finish = value => {
+        window.clearTimeout(timeout);
+        img.removeEventListener("load", loaded);
+        img.removeEventListener("error", broken);
+        resolve(value);
+      };
+      const loaded = () => finish(img.naturalWidth > 0);
+      const broken = () => finish(false);
+      img.addEventListener("load", loaded);
+      img.addEventListener("error", broken);
+      timeout = window.setTimeout(() => finish(false), 4000);
+    });
+  }
+  async function show(target, direction) {
     const token = ++request;
-    const next = (target + slides.length) % slides.length;
-    const img = slides[next].querySelector("img");
-    img.loading = "eager";
-    try { await img.decode(); } catch (_) { return; }
-    if (token !== request) return;
-    slides[index].classList.remove("is-active");
-    slides[index].setAttribute("aria-hidden", "true");
-    slides[next].classList.add("is-active");
-    slides[next].setAttribute("aria-hidden", "false");
-    index = next;
-    count.textContent = (index + 1) + " / " + slides.length;
+    for (let attempt = 0; attempt < slides.length; attempt++) {
+      const next = ((target + attempt * direction) % slides.length + slides.length) % slides.length;
+      if (failed.has(next)) continue;
+      const img = slides[next].querySelector("img");
+      const loaded = await ready(img);
+      if (token !== request) return;
+      if (!loaded) { failed.add(next); continue; }
+      slides[index].classList.remove("is-active");
+      slides[index].setAttribute("aria-hidden", "true");
+      slides[next].classList.add("is-active");
+      slides[next].setAttribute("aria-hidden", "false");
+      index = next;
+      count.textContent = (index + 1) + " / " + slides.length;
+      return;
+    }
   }
-  frame.querySelector("[data-hero-prev]").addEventListener("click", () => { show(index - 1); schedule(); });
-  frame.querySelector("[data-hero-next]").addEventListener("click", () => { show(index + 1); schedule(); });
+  frame.querySelector("[data-hero-prev]").addEventListener("click", () => { show(index - 1, -1); schedule(); });
+  frame.querySelector("[data-hero-next]").addEventListener("click", () => { show(index + 1, 1); schedule(); });
   pause.addEventListener("click", () => { paused = !paused; schedule(); });
   document.addEventListener("visibilitychange", schedule);
   motion.addEventListener("change", () => { paused = motion.matches; schedule(); });
