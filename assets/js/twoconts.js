@@ -91,17 +91,26 @@
       return;
     }
 
-    placesGrid.innerHTML = matches.map(place => `<article class="place-card">
-      <div class="place-image"${place.image ? ` style="background-image:url('${escapeHtml(place.image)}')"` : ""}>
-        <span>${escapeHtml(place.category)}</span>
-      </div>
-      <div class="place-copy">
-        <p class="place-kicker">${escapeHtml(place.kicker || area.label)}</p>
-        <h3>${escapeHtml(place.name)}</h3>
-        <p>${escapeHtml(place.description)}</p>
-        ${place.tip ? `<p class="place-tip"><strong>Local tip</strong> ${escapeHtml(place.tip)}</p>` : ""}
-      </div>
-    </article>`).join("");
+    placesGrid.innerHTML = matches.map(place => {
+      const imageStyle = place.image ? ` style="background-image:url('${escapeHtml(place.image)}')"` : "";
+      const imageAlt = escapeHtml(place.imageAlt || place.name);
+      const photoCredit = place.photoCredit
+        ? `<a class="photo-credit" href="${escapeHtml(place.photoCredit.url)}" target="_blank" rel="noreferrer">Photo: ${escapeHtml(place.photoCredit.label)}</a>`
+        : "";
+
+      return `<article class="place-card">
+        <div class="place-image"${imageStyle} role="img" aria-label="${imageAlt}">
+          <span>${escapeHtml(place.category)}</span>
+          ${photoCredit}
+        </div>
+        <div class="place-copy">
+          <p class="place-kicker">${escapeHtml(place.kicker || area.label)}</p>
+          <h3>${escapeHtml(place.name)}</h3>
+          <p>${escapeHtml(place.description)}</p>
+          ${place.tip ? `<p class="place-tip"><strong>Local tip</strong> ${escapeHtml(place.tip)}</p>` : ""}
+        </div>
+      </article>`;
+    }).join("");
   }
 
   function renderIntroduction() {
