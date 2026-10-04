@@ -152,3 +152,39 @@
 
   render();
 })();
+(() => {
+  const frame = document.querySelector(".hero-slideshow");
+  if (!frame) return;
+  const slides = Array.from(frame.querySelectorAll(".hero-slide"));
+  const pause = frame.querySelector("[data-hero-pause]");
+  const count = frame.querySelector("[data-hero-count]");
+  const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let index = 0, paused = motion.matches, timer = null, request = 0;
+  function schedule() {
+    window.clearInterval(timer);
+    timer = null;
+    pause.textContent = paused ? "Play" : "Pause";
+    pause.setAttribute("aria-label", paused ? "Play photo slideshow" : "Pause photo slideshow");
+    if (!paused && !document.hidden) timer = window.setInterval(() => show(index + 1), 5500);
+  }
+  async function show(target) {
+    const token = ++request;
+    const next = (target + slides.length) % slides.length;
+    const img = slides[next].querySelector("img");
+    img.loading = "eager";
+    try { await img.decode(); } catch (_) { return; }
+    if (token !== request) return;
+    slides[index].classList.remove("is-active");
+    slides[index].setAttribute("aria-hidden", "true");
+    slides[next].classList.add("is-active");
+    slides[next].setAttribute("aria-hidden", "false");
+    index = next;
+    count.textContent = (index + 1) + " / " + slides.length;
+  }
+  frame.querySelector("[data-hero-prev]").addEventListener("click", () => { show(index - 1); schedule(); });
+  frame.querySelector("[data-hero-next]").addEventListener("click", () => { show(index + 1); schedule(); });
+  pause.addEventListener("click", () => { paused = !paused; schedule(); });
+  document.addEventListener("visibilitychange", schedule);
+  motion.addEventListener("change", () => { paused = motion.matches; schedule(); });
+  schedule();
+})();
