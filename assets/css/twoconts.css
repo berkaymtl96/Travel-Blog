@@ -80,9 +80,9 @@ body.tc-site{margin:0;background:var(--paper);color:var(--ink);font-family:"DM S
 .empty-card .empty-note{font-size:12px;color:rgba(255,255,255,.56)}
 .empty-note code{font-family:"DM Sans",sans-serif;color:#fff}
 .place-card{background:#f8f4ed;color:var(--ink)}
-.place-image{height:225px;background:linear-gradient(125deg,#d2b09c,#43676a);background-position:center;background-size:cover;display:flex;align-items:start;padding:17px}
+.place-image{position:relative;height:225px;background:linear-gradient(125deg,#d2b09c,#43676a);background-position:center;background-size:cover;display:flex;align-items:start;padding:17px}
 .place-image span{border-radius:999px;background:rgba(255,255,255,.88);padding:6px 10px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-.place-copy{padding:23px}
+.photo-credit{position:absolute;right:10px;bottom:10px;max-width:calc(100% - 20px);padding:5px 7px;background:rgba(15,22,20,.68);color:#fff!important;font-size:9px;line-height:1.2;letter-spacing:.02em;text-decoration:none!important;opacity:.82;transition:opacity .2s ease}.photo-credit:hover,.photo-credit:focus{opacity:1}.place-copy{padding:23px}
 .place-kicker{font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--orange);margin:0}
 .place-copy h3{font:500 31px/1.05 "Playfair Display",Georgia,serif;letter-spacing:-.04em;margin:10px 0}
 .place-copy>p:not(.place-kicker){color:#515854;font-size:14px;margin:0}
