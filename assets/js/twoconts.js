@@ -99,15 +99,18 @@
         : "";
 
       return `<article class="place-card">
-        <div class="place-image"${imageStyle} role="img" aria-label="${imageAlt}">
+        ${place.image ? `<div class="place-image"${imageStyle} role="img" aria-label="${imageAlt}">
           <span>${escapeHtml(place.category)}</span>
           ${photoCredit}
-        </div>
+        </div>` : ""}
+
         <div class="place-copy">
           <p class="place-kicker">${escapeHtml(place.kicker || area.label)}</p>
           <h3>${escapeHtml(place.name)}</h3>
           <p>${escapeHtml(place.description)}</p>
           ${place.tip ? `<p class="place-tip"><strong>Local tip</strong> ${escapeHtml(place.tip)}</p>` : ""}
+          ${place.visitStatus === "closed" ? '<p class="place-visit-status"><strong>Currently closed</strong> — check reopening before visiting.</p>' : ""}
+          ${place.sourceUrl ? `<a class="place-source" href="${escapeHtml(place.sourceUrl)}" target="_blank" rel="noopener noreferrer">Visitor information ↗</a>` : ""}
         </div>
       </article>`;
     }).join("");
