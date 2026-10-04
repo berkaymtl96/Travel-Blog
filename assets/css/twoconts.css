@@ -181,3 +181,5 @@ body.tc-site{margin:0;background:var(--paper);color:var(--ink);font-family:"DM S
 .hero-slide-controls button:focus-visible{outline:2px solid white;outline-offset:2px}
 @media(max-width:760px){.hero-slideshow{top:92px;right:12px;width:178px;height:237.333px;aspect-ratio:3/4;animation:none;opacity:.72}.hero-slide figcaption{padding:40px 9px 45px}.hero-slide figcaption strong{font-size:15px}.hero-slide figcaption a{font-size:8px}.hero-slide-controls{gap:4px;left:6px;right:6px;font-size:9px}.hero-slide-controls button{padding:3px 5px;min-height:28px}}
 @media(prefers-reduced-motion:reduce){.hero-slideshow{animation:none}.hero-slide{transition:none}}
+
+.place-source{display:inline-block;margin-top:16px;font-size:12px;font-weight:700;border-bottom:1px solid currentColor}.place-visit-status{background:#f1dfbd;padding:10px;font-size:12px!important;color:#553c19!important;margin-top:15px!important}
