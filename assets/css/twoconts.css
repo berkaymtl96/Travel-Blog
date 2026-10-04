@@ -128,12 +128,14 @@ body.tc-site{margin:0;background:var(--paper);color:var(--ink);font-family:"DM S
   .site-nav.is-open{display:flex}
   .site-nav .nav-outline{text-align:center}
   .tc-hero{min-height:650px}
+  .hero-photo-hagia{top:92px;right:-34px;width:178px;opacity:.72}
+  .hero-plates{top:110px;right:6px;width:190px;height:175px;transform:scale(.68);transform-origin:top right}
   .hero-inner{padding:128px 0 40px}
   .hero-copy h1{font-size:57px}
   .hero-copy p:not(.eyebrow){font-size:16px}
   .hero-bottom{margin-top:48px;display:block}
   .hero-bottom>p{display:none}
-  .bosphorus-line{justify-content:center}
+  .hero-bosphorus-meta{align-items:center}.hero-photo-credit{font-size:8px;text-align:center}.bosphorus-line{justify-content:center}
   .side-chooser{min-height:200px}
   .side-choice{padding:28px 18px}
   .side-choice strong{font-size:39px}
