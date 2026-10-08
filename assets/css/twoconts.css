@@ -183,3 +183,6 @@ body.tc-site{margin:0;background:var(--paper);color:var(--ink);font-family:"DM S
 @media(prefers-reduced-motion:reduce){.hero-slideshow{animation:none}.hero-slide{transition:none}}
 
 .place-source{display:inline-block;margin-top:16px;font-size:12px;font-weight:700;border-bottom:1px solid currentColor}.place-visit-status{background:#f1dfbd;padding:10px;font-size:12px!important;color:#553c19!important;margin-top:15px!important}
+
+/* Keep source and licence links readable in photo credits. */
+.photo-credit a{color:inherit;text-decoration:underline}

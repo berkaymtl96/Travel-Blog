@@ -95,7 +95,7 @@
       const imageStyle = place.image ? ` style="background-image:url('${escapeHtml(place.image)}')"` : "";
       const imageAlt = escapeHtml(place.imageAlt || place.name);
       const photoCredit = place.photoCredit
-        ? `<a class="photo-credit" href="${escapeHtml(place.photoCredit.url)}" target="_blank" rel="noreferrer">Photo: ${escapeHtml(place.photoCredit.label)}</a>`
+        ? `<div class="photo-credit"><a href="${escapeHtml(place.photoCredit.url)}" target="_blank" rel="noopener noreferrer">Photo: ${escapeHtml(place.photoCredit.label)}</a>${place.photoCredit.licenseUrl ? ` · <a href="${escapeHtml(place.photoCredit.licenseUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(place.photoCredit.license)}</a>` : place.photoCredit.license ? ` · ${escapeHtml(place.photoCredit.license)}` : ""}${place.photoCredit.changes ? `<br>${escapeHtml(place.photoCredit.changes)}` : ""}</div>`
         : "";
 
       return `<article class="place-card">

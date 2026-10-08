@@ -10,7 +10,7 @@ window.TwoContsData = {
         {
           "id": "karakoy",
           "label": "Karaköy",
-          "note": "Coffee, design, side streets"
+          "note": "Waterfront, Galata walks and culture"
         },
         {
           "id": "besiktas",
@@ -193,6 +193,197 @@ window.TwoContsData = {
       "photoCredit": {
         "label": "AHMAD BADER / Unsplash",
         "url": "https://unsplash.com/photos/a-view-of-a-bridge-over-a-body-of-water-MCtUhEiJBHg"
+      }
+    },
+    {
+      "id": "galata-tower",
+      "side": "europe",
+      "area": "karakoy",
+      "category": "culture",
+      "name": "Galata Kulesi",
+      "kicker": "A landmark above the lanes",
+      "description": "Walk uphill from Karaköy to Galata’s landmark tower, then linger in the surrounding streets. A natural focal point for a day combining the waterfront and the hillside neighbourhood.",
+      "tip": "Check current admission and visitor access before planning an interior visit. The approach from Karaköy is uphill.",
+      "sourceUrl": "https://galatakulesi.gov.tr/",
+      "verifiedOn": "2026-10-08",
+      "image": "assets/img/karakoy/galata-tower.webp",
+      "imageAlt": "Galata Kulesi",
+      "photoCredit": {
+        "label": "Vogueeatss / Wikimedia Commons",
+        "url": "https://commons.wikimedia.org/wiki/File:The_Galata_Tower.jpg",
+        "license": "CC BY-SA 4.0",
+        "changes": "Resized and displayed cropped",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "galata-bridge",
+      "side": "europe",
+      "area": "karakoy",
+      "category": "bosphorus",
+      "name": "Galata Köprüsü",
+      "kicker": "Across the Golden Horn",
+      "description": "The bridge connects Karaköy with Eminönü across the Golden Horn. Walk it for views of the waterfront, ferries and the old-city skyline.",
+      "tip": "The crossing is over the Golden Horn, not between Europe and Asia. Keep pedestrian paths clear when stopping for photos.",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/Category:Galata_Bridge",
+      "verifiedOn": "2026-10-08",
+      "image": "assets/img/karakoy/galata-bridge.webp",
+      "imageAlt": "Galata Köprüsü",
+      "photoCredit": {
+        "label": "Niels Elgaard Larsen / Wikimedia Commons",
+        "url": "https://commons.wikimedia.org/wiki/File:GalataBridge.jpg",
+        "license": "CC BY-SA 3.0",
+        "changes": "Resized and displayed cropped",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/"
+      }
+    },
+    {
+      "id": "camondo-stairs",
+      "side": "europe",
+      "area": "karakoy",
+      "category": "hidden",
+      "name": "Kamondo Merdivenleri",
+      "kicker": "A sculptural street connection",
+      "description": "These curving historic steps make a memorable stop between Bankalar Caddesi and the uphill streets towards Galata. Take a moment to notice the stonework before continuing your walk.",
+      "tip": "It is a working pedestrian staircase: take photos without blocking people using the steps.",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/Category:Camondo_Stairs",
+      "verifiedOn": "2026-10-08",
+      "image": "assets/img/karakoy/camondo-stairs.webp",
+      "imageAlt": "Kamondo Merdivenleri",
+      "photoCredit": {
+        "label": "Danbury / Wikimedia Commons",
+        "url": "https://commons.wikimedia.org/wiki/File:KamondoMerdiveni1.jpg",
+        "license": "Public domain",
+        "changes": "Resized and displayed cropped"
+      }
+    },
+    {
+      "id": "bankalar-caddesi",
+      "side": "europe",
+      "area": "karakoy",
+      "category": "culture",
+      "name": "Bankalar Caddesi",
+      "kicker": "Look up at the façades",
+      "description": "Banks Street is a rewarding stretch for discovering the architecture of Karaköy and Galata. Look above street level for the details in its historic façades, then continue to the Camondo Stairs.",
+      "tip": "Make this part of your walk towards Galata rather than a separate cross-city trip.",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/Category:Bankalar_Caddesi",
+      "verifiedOn": "2026-10-08",
+      "image": "assets/img/karakoy/bankalar-caddesi.webp",
+      "imageAlt": "Architectural detail on Bankalar Caddesi",
+      "photoCredit": {
+        "label": "Dosseman / Wikimedia Commons",
+        "url": "https://commons.wikimedia.org/wiki/File:Bankalar_Caddesi_8445.jpg",
+        "license": "CC BY-SA 4.0",
+        "changes": "Resized and displayed cropped",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "loi-bosphorus",
+      "side": "europe",
+      "area": "karakoy",
+      "category": "food",
+      "name": "Loi Bosphorus Restaurant",
+      "kicker": "A meal with a Bosphorus view",
+      "description": "A Karaköy restaurant option for visitors who want to combine a meal with views of the Bosphorus. Use the restaurant’s own menu and booking information to plan your visit.",
+      "tip": "Confirm the menu, prices and availability directly; request a view-facing table when reserving.",
+      "sourceUrl": "https://loibosphorus.com/",
+      "verifiedOn": "2026-10-08"
+    },
+    {
+      "id": "istanbul-modern",
+      "side": "europe",
+      "area": "karakoy",
+      "category": "culture",
+      "name": "İstanbul Modern Sanat Müzesi",
+      "kicker": "Contemporary art on the waterfront",
+      "description": "Explore modern and contemporary art in İstanbul Modern’s waterfront building designed by Renzo Piano. Pair the exhibitions with a walk through the neighbouring Galataport area.",
+      "tip": "Check the current exhibitions, admission and opening days on the museum’s website.",
+      "sourceUrl": "https://www.istanbulmodern.org/en/visit/museum",
+      "verifiedOn": "2026-10-08",
+      "image": "assets/img/karakoy/istanbul-modern.webp",
+      "imageAlt": "İstanbul Modern Sanat Müzesi",
+      "photoCredit": {
+        "label": "Dosseman / Wikimedia Commons",
+        "url": "https://commons.wikimedia.org/wiki/File:Istanbul_Museum_of_Modern_Art_Exterior_in_2024_5620.jpg",
+        "license": "CC BY-SA 4.0",
+        "changes": "Resized and displayed cropped",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "fransiz-gecidi",
+      "side": "europe",
+      "area": "karakoy",
+      "category": "hidden",
+      "name": "Fransız Geçidi",
+      "kicker": "A passage off the main streets",
+      "description": "A small passage in Karaköy’s Kemankeş neighbourhood linking Kemankeş Caddesi and Galata Mumhanesi Caddesi. Include it in a wander through the surrounding streets.",
+      "tip": "Treat it as a short neighbourhood stop; individual cafés and businesses have their own opening times.",
+      "sourceUrl": "https://kulturenvanteri.com/fr/yer/fransiz-gecidi/",
+      "verifiedOn": "2026-10-08"
+    },
+    {
+      "id": "yeralti-camii",
+      "side": "europe",
+      "area": "karakoy",
+      "category": "hidden",
+      "name": "Yeraltı Camii",
+      "kicker": "A quieter layer of Karaköy",
+      "description": "Karaköy’s underground mosque offers a different perspective on the neighbourhood’s religious heritage. Its enclosed setting contrasts with the busy streets above.",
+      "tip": "This is an active place of worship. Dress respectfully, follow posted guidance and avoid disrupting prayers.",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/Category:Yeraltı_Camii",
+      "verifiedOn": "2026-10-08",
+      "image": "assets/img/karakoy/yeralti-camii.webp",
+      "imageAlt": "Yeraltı Camii",
+      "photoCredit": {
+        "label": "Nidayi / Wikimedia Commons",
+        "url": "https://commons.wikimedia.org/wiki/File:Yeralt%C4%B1_Cami.jpg",
+        "license": "CC BY-SA 4.0",
+        "changes": "Resized and displayed cropped",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "kilic-ali-pasa-hamami",
+      "side": "europe",
+      "area": "karakoy",
+      "category": "culture",
+      "name": "Kılıç Ali Paşa Hamamı",
+      "kicker": "Make time for a hamam ritual",
+      "description": "A historic bathhouse in the Tophane area offering a traditional hamam experience. Book a session as a deliberate pause in your Karaköy day.",
+      "tip": "Reserve ahead and check the appropriate session times and preparation guidance with the operator.",
+      "sourceUrl": "https://kilicalipasahamami.com/en/faq",
+      "verifiedOn": "2026-10-08",
+      "image": "assets/img/karakoy/kilic-ali-pasa-hamami.webp",
+      "imageAlt": "Kılıç Ali Paşa Hamamı",
+      "photoCredit": {
+        "label": "Metuboy / Wikimedia Commons",
+        "url": "https://commons.wikimedia.org/wiki/File:K%C4%B1l%C4%B1%C3%A7_Ali_Pasha_Hamam.jpg",
+        "license": "CC BY-SA 4.0",
+        "changes": "Resized and displayed cropped",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "galataport",
+      "side": "europe",
+      "area": "karakoy",
+      "category": "shopping",
+      "name": "Galataport",
+      "kicker": "Shopping beside the water",
+      "description": "A waterfront destination bringing together shops, restaurants and cultural stops. Combine a browse with İstanbul Modern and time beside the Bosphorus.",
+      "tip": "Check individual venue opening times and current access information before making specific plans.",
+      "sourceUrl": "https://galataport.com/",
+      "verifiedOn": "2026-10-08",
+      "image": "assets/img/karakoy/galataport.webp",
+      "imageAlt": "Bosphorus waterfront at Galataport",
+      "photoCredit": {
+        "label": "Joseolgon / Wikimedia Commons",
+        "url": "https://commons.wikimedia.org/wiki/File:Galataport_2026.jpg",
+        "license": "CC BY 4.0",
+        "changes": "Resized and displayed cropped",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       }
     },
     {
