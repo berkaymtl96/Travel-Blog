@@ -83,10 +83,9 @@
     if (!matches.length) {
       placesGrid.innerHTML = `<article class="empty-card">
         <p class="eyebrow">CURATED, NOT CROWDED</p>
-        <h3>${escapeHtml(area.label)} is next.</h3>
-        <p>TwoConts will only publish places we would genuinely send a friend to. This collection is waiting for its first recommendation.</p>
+        <h3>No ${escapeHtml(category.label.toLowerCase())} picks here yet.</h3>
+        <p>Try Everything to see the places in this neighbourhood, or choose another category.</p>
         <span class="empty-rule"></span>
-        <p class="empty-note">Add a place in <code>assets/js/twoconts-data.js</code> and this card becomes a full recommendation automatically.</p>
       </article>`;
       return;
     }
