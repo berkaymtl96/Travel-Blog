@@ -50,7 +50,9 @@
   }
 
   function renderCategories() {
-    categoryList.innerHTML = data.categories.map(category => {
+    const available = new Set(data.places.filter(place => place.side === state.side && place.area === state.area).map(place => place.category));
+    if (state.category !== "all" && !available.has(state.category)) state.category = "all";
+    categoryList.innerHTML = data.categories.filter(category => category.id === "all" || available.has(category.id)).map(category => {
       const selected = category.id === state.category;
       return `<button class="category-pill${selected ? " is-selected" : ""}" type="button" data-category="${category.id}" aria-pressed="${selected}">${category.label}</button>`;
     }).join("");
