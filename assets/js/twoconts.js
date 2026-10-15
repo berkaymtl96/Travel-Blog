@@ -92,7 +92,9 @@
       return;
     }
 
-    placesGrid.innerHTML = matches.map(place => {
+    const summary = data.editorial && data.editorial.categorySummaries[state.category];
+    const summaryMarkup = state.category !== "all" && summary ? `<div class="category-introduction"><h3>${escapeHtml(category.label)}</h3><p>${escapeHtml(summary)}</p></div>` : "";
+    placesGrid.innerHTML = summaryMarkup + matches.map(place => {
       const imageStyle = place.image ? ` style="background-image:url('${escapeHtml(place.image)}')"` : "";
       const imageAlt = escapeHtml(place.imageAlt || place.name);
       const photoCredit = place.photoCredit
@@ -122,7 +124,7 @@
     const area = currentArea();
     areaEyebrow.textContent = side.eyebrow;
     areaTitle.textContent = `${area.label}, at your pace.`;
-    areaDescription.textContent = side.intro;
+    areaDescription.textContent = (data.editorial && data.editorial.intros[state.area]) || side.intro;
   }
 
   function render() {
