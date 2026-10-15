@@ -104,6 +104,7 @@
         </div>` : ""}
 
         <div class="place-copy">
+          ${place.imageContext ? `<p class="place-image-context">Photo: ${escapeHtml(place.imageContext)}</p>` : ""}
           <p class="place-kicker">${escapeHtml(place.kicker || area.label)}</p>
           <h3>${escapeHtml(place.name)}</h3>
           <p>${escapeHtml(place.description)}</p>

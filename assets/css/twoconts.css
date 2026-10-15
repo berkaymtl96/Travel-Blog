@@ -186,3 +186,8 @@ body.tc-site{margin:0;background:var(--paper);color:var(--ink);font-family:"DM S
 
 /* Keep source and licence links readable in photo credits. */
 .photo-credit a{color:inherit;text-decoration:underline}
+
+/* Selected TwoConts Istanbul wordmark. */
+.tc-logo{display:block;width:130px;height:auto;object-fit:contain}.tc-brand,.brand{flex-shrink:0}.tc-header .tc-logo{width:118px}.tc-footer .tc-logo{width:150px}
+
+.place-image-context{font-size:11px;color:var(--stone);margin:0 0 12px}
