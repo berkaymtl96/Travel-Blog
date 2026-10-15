@@ -1,4 +1,4 @@
-/* TwoConts content model: curated recommendations and checked visitor notes. */
+/* TwoConts curated Istanbul area content. */
 window.TwoContsData = {
   "sides": {
     "europe": {
@@ -1307,5 +1307,40 @@ window.TwoContsData = {
       "sourceUrl": "https://babylon.com.tr/en/faq",
       "verifiedOn": "2026-10-14"
     }
-  ]
+  ],
+  "editorial": {
+    "intros": {
+      "karakoy": "Old banking streets, art spaces and ferry views meet in Karaköy. Explore its layered architecture, waterfront and independent cafés on foot.",
+      "besiktas": "A lively transport hub with palace gardens, student cafés and neighbourhood markets. Walk from the centre towards the waterfront for a different pace.",
+      "sariyer": "Northern Bosphorus villages, leafy parks and forest escapes define greater Sarıyer. Distances are significant, so plan each outing as its own trip.",
+      "eyupsultan": "A pilgrimage quarter beside the Golden Horn, known for its mosque complex and hillside views. Dress respectfully around religious sites.",
+      "beyoglu": "Historic passages, art museums and lively streets branch off İstiklal Avenue. Wander beyond the main pedestrian street for quieter discoveries.",
+      "sirkeci": "A historic gateway between the old city, railway heritage and the waterfront. Its lanes are particularly rewarding for a short food-and-culture walk.",
+      "ortakoy": "A compact Bosphorus waterfront beneath the bridge, with a landmark mosque and bustling square. Visit outside peak weekend hours for more room to explore.",
+      "balat": "Fener and Balat reward slow walks among steep streets, religious landmarks and colourful façades. Remember that many photogenic buildings are private homes.",
+      "sultanahmet": "Istanbul's monumental historic peninsula is dense with Byzantine and Ottoman heritage. Book major attractions ahead when possible and leave time for smaller sites.",
+      "galata": "Steep cobbled lanes wind around the medieval tower, independent shops and music venues. Wear comfortable shoes and explore the side streets.",
+      "sisli": "Şişli combines everyday city life with Bomonti's cultural venues and nightlife. Expect a more urban, less postcard-like Istanbul.",
+      "zeyrek": "Historic wooden houses, Byzantine heritage and quiet slopes make Zeyrek a rewarding walking district. Be considerate in this lived-in residential area.",
+      "moda": "Kadıköy's laid-back coastal neighbourhood blends cafés, parks and a long waterfront stroll. Come for a slower afternoon and stay for sunset.",
+      "kadikoy": "Markets, food streets and creative corners make central Kadıköy an ideal introduction to Asian-side Istanbul. Explore on foot from the ferry terminal.",
+      "uskudar": "Mosques, waterfront promenades and cross-strait views shape Üsküdar. Its ferry connections make it easy to pair with other Asian-side stops.",
+      "kuzguncuk": "Colourful houses, small cafés and a community garden lend Kuzguncuk its village atmosphere. Keep visits respectful of residents and local businesses.",
+      "beylerbeyi": "A palace and intimate waterfront streets anchor Beylerbeyi beneath the Bosphorus Bridge. It suits a short heritage-focused visit.",
+      "kandilli": "Kandilli's hillside lanes and Bosphorus setting offer a quieter side of Istanbul. Allow time for the slopes and limited transport connections.",
+      "beykoz": "Green groves, waterside villages and historic pavilions spread across Beykoz. Choose a cluster of stops rather than trying to cover the entire district in one day.",
+      "camlica": "Hilltop parks, a grand mosque and sweeping observation points make Çamlıca about Istanbul's skyline. Clear weather matters for the views.",
+      "atasehir": "A modern business and residential district with shopping destinations and a botanical escape. Plan around specific stops rather than a walking old-town route.",
+      "sultanbeyli": "Sultanbeyli's historic Aydos area offers an alternative to the central tourist circuit. Check access and opening details before travelling."
+    },
+    "categorySummaries": {
+      "food": "Taste the area's local dining character through the places selected below.",
+      "cafes": "Take a break in the area's cafés and neighbourhood gathering spots.",
+      "culture": "Discover architecture, museums and stories that give this area its identity.",
+      "nightlife": "Plan an evening around the area's live venues and late-night atmosphere.",
+      "hidden": "Look beyond the obvious route for quieter streets, gardens and unexpected corners.",
+      "bosphorus": "Experience the water, waterfront paths or viewpoints that connect this area to the strait.",
+      "shopping": "Browse distinctive shops, market streets and local retail destinations."
+    }
+  }
 };
