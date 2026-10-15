@@ -186,3 +186,8 @@ body.tc-site{margin:0;background:var(--paper);color:var(--ink);font-family:"DM S
 
 /* Keep source and licence links readable in photo credits. */
 .photo-credit a{color:inherit;text-decoration:underline}
+
+/* TwoConts brand artwork */
+.tc-brand-logo{display:block;width:155px;height:auto;max-height:72px;object-fit:contain;border-radius:4px}
+.tc-footer .tc-brand-logo{width:170px}
+@media(max-width:640px){.tc-brand-logo{width:118px;max-height:64px}}
