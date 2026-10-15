@@ -42,6 +42,4 @@ The site will automatically put it in the correct side, area, and category.
 
 ## Publishing
 
-This repository contains the completed site version. The current Cloudflare Pages project is configured as a direct upload, rather than a GitHub-connected Pages project, so GitHub commits do not automatically publish it.
-
-To make future updates publish automatically, create a Git-connected Cloudflare Pages project using this repository and set `main` as the production branch. For a one-time direct update, deploy the repository folder to the existing `twocontinents` Pages project with Wrangler.
+The Cloudflare Pages project `twoconts` is connected to this repository. Commits to `main` automatically publish to https://twoconts.com. The older `twocontinents` direct-upload project is not the production site.
