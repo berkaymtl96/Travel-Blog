@@ -119,6 +119,29 @@
     }).join("");
   }
 
+
+  function renderFoodTour() {
+    let section = document.querySelector("#food-tour");
+    if (!section) {
+      section = document.createElement("aside");
+      section.id = "food-tour";
+      section.className = "place-card";
+      section.style.marginTop = "24px";
+      section.setAttribute("aria-label", "Book a food tour");
+      placesGrid.after(section);
+    }
+    section.style.display = (!["karakoy", "kadikoy"].includes(state.area) ||
+      !["all", "food"].includes(state.category)) ? "none" : "";
+    section.innerHTML = `<div class="place-copy">
+      <p class="place-kicker">FOOD EXPERIENCE · KARAKÖY &amp; KADIKÖY</p>
+      <h3>Taste of Istanbul: Street Food &amp; Culture</h3>
+      <p>Explore street food in Karaköy, cross to Kadıköy by ferry, and discover local markets with a guide.</p>
+      <p class="place-tip"><strong>Before you book</strong> Food, drinks and transport are not included in the tour price. Check the listing for current options and meeting details.</p>
+      <a class="nav-outline" href="https://www.getyourguide.com/istanbul-l56/taste-of-istanbul-food-tour-street-food-culture-t1361409/?partner_id=GTFXDFQ&amp;utm_medium=online_publisher" target="_blank" rel="sponsored noopener noreferrer">Check availability on GetYourGuide ↗</a>
+      <p><small>Affiliate link: TwoConts may earn a commission if you book through this link, at no extra cost to you.</small></p>
+    </div>`;
+  }
+
   function renderIntroduction() {
     const side = currentSide();
     const area = currentArea();
@@ -133,6 +156,7 @@
     renderAreas();
     renderCategories();
     renderPlaces();
+    renderFoodTour();
   }
 
   sideButtons.forEach(button => {
