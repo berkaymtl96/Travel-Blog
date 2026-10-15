@@ -108,6 +108,7 @@
         </div>` : ""}
 
         <div class="place-copy">
+          ${place.imageCaption ? `<p class="image-caption">${escapeHtml(place.imageCaption)}</p>` : ""}
           <p class="place-kicker">${escapeHtml(place.kicker || area.label)}</p>
           <h3>${escapeHtml(place.name)}</h3>
           <p>${escapeHtml(place.description)}</p>

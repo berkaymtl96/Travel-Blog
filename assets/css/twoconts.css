@@ -194,3 +194,5 @@ body.tc-site{margin:0;background:var(--paper);color:var(--ink);font-family:"DM S
 
 .category-introduction{grid-column:1/-1;padding:12px 0 24px;border-bottom:1px solid rgba(255,255,255,.2)}
 .category-introduction h3{font:500 28px "Playfair Display",Georgia,serif;margin:0 0 8px}.category-introduction p{max-width:670px;margin:0;color:#d7d6d0}
+
+.image-caption { font-size: .75rem; color: #68716c; margin: 0 0 .8rem; }

@@ -42,6 +42,6 @@ The site will automatically put it in the correct side, area, and category.
 
 ## Publishing
 
-This repository contains the completed site version. The current Cloudflare Pages project is configured as a direct upload, rather than a GitHub-connected Pages project, so GitHub commits do not automatically publish it.
+The live site https://twoconts.com is served by the GitHub-connected Cloudflare Pages project `twoconts`. Pushing to `main` triggers production deployment. The older `twocontinents` project is a separate direct-upload project.
 
-To make future updates publish automatically, create a Git-connected Cloudflare Pages project using this repository and set `main` as the production branch. For a one-time direct update, deploy the repository folder to the existing `twocontinents` Pages project with Wrangler.
+Before publishing, check both JavaScript files with `node --check` and verify area/category navigation in a browser. Local place photos include source and license attribution in the data file. Images showing the surrounding neighbourhood rather than the named venue are captioned accordingly.
