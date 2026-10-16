@@ -18,6 +18,26 @@
       affiliateUrl: "https://www.getyourguide.com/istanbul-l56/tour-of-grand-bazaarfrom-rooftops-to-the-secret-passages-t643510/?partner_id=GTFXDFQ&utm_medium=online_publisher"
     });
   }
+  if (!data.places.some(place => place.id === "sultanahmet-three-landmarks-tour")) {
+    const photo = data.places.find(place => place.id === "blue-mosque");
+    data.places.push({
+      id: "sultanahmet-three-landmarks-tour", side: "europe", area: "sultanahmet", category: "culture",
+      name: "Blue Mosque, Hagia Sophia & Basilica Cistern Tour",
+      kicker: "Three Sultanahmet landmarks with a guide",
+      description: "Explore three of the old city’s major landmarks on a small-group guided tour. The listing includes pre-reserved Hagia Sophia and Basilica Cistern admission alongside a visit to the Blue Mosque.",
+      tip: "Check your selected option for the meeting point, language, admission details and visitor requirements before booking.",
+      image: photo && photo.image, imageAlt: "Blue Mosque, one of the landmarks on this tour",
+      photoCredit: photo && photo.photoCredit,
+      affiliateLabel: "Book this Sultanahmet tour",
+      affiliateUrl: "https://www.getyourguide.com/istanbul-l56/istanbul-blue-mosque-hagia-sophia-basilica-cistern-tour-t1051517/?partner_id=GTFXDFQ&utm_medium=online_publisher"
+    });
+  }
+  const dolmabahce = data.places.find(place => place.id === "dolmabahce-palace");
+  if (dolmabahce) {
+    dolmabahce.affiliateUrl = "https://www.getyourguide.com/istanbul-l56/dolmabahce-palace-harem-skip-the-line-entry-audio-guide-t697865/?partner_id=GTFXDFQ&utm_medium=online_publisher";
+    dolmabahce.affiliateLabel = "Book Dolmabahçe Palace & Harem tickets";
+    dolmabahce.affiliateDescription = "This ticket option includes palace and Harem admission with an audio guide. Check the booking page for entry instructions and audio-guide collection requirements.";
+  }
   const matchesCategory = (place, category) => category === "all" || place.category === category || (place.secondaryCategories || []).includes(category);
 
   // Share the tower recommendation with its home neighbourhood and the Karaköy walking route.
@@ -152,7 +172,7 @@
           <p>${escapeHtml(place.description)}</p>
           ${place.tip ? `<p class="place-tip"><strong>Local tip</strong> ${escapeHtml(place.tip)}</p>` : ""}
           ${towerBooking(place)}
-          ${place.affiliateUrl ? `<div class="affiliate-booking"><a class="place-source" href="${escapeHtml(place.affiliateUrl)}" target="_blank" rel="sponsored noopener noreferrer">Book this Grand Bazaar tour ↗</a><p><small>Affiliate link: TwoConts may earn a commission if you book through this link, at no extra cost to you.</small></p></div>` : ""}
+          ${place.affiliateUrl ? `<div class="affiliate-booking">${place.affiliateDescription ? `<p>${escapeHtml(place.affiliateDescription)}</p>` : ""}<a class="place-source" href="${escapeHtml(place.affiliateUrl)}" target="_blank" rel="sponsored noopener noreferrer">${escapeHtml(place.affiliateLabel || "Book this Grand Bazaar tour")} ↗</a><p><small>Affiliate link: TwoConts may earn a commission if you book through this link, at no extra cost to you.</small></p></div>` : ""}
           ${place.visitStatus === "closed" ? '<p class="place-visit-status"><strong>Currently closed</strong> — check reopening before visiting.</p>' : ""}
           ${place.sourceUrl ? `<a class="place-source" href="${escapeHtml(place.sourceUrl)}" target="_blank" rel="noopener noreferrer">Visitor information ↗</a>` : ""}
         </div>
