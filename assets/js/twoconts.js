@@ -2,6 +2,24 @@
   const data = window.TwoContsData;
   if (!data) return;
 
+  // Bookable experiences also make their relevant neighbourhood filters available.
+  if (!data.sides.europe.areas.some(area => area.id === "beyazit")) {
+    data.sides.europe.areas.push({ id: "beyazit", label: "Grand Bazaar & Beyazıt", note: "Market lanes, courtyards and crafts" });
+  }
+  if (data.editorial) data.editorial.intros.beyazit = "Explore the Grand Bazaar district through its market lanes, historic courtyards and workshops. A guided walk can help you discover corners beyond the main shopping routes.";
+  if (!data.places.some(place => place.id === "grand-bazaar-rooftops-tour")) {
+    data.places.push({
+      id: "grand-bazaar-rooftops-tour", side: "europe", area: "beyazit",
+      category: "shopping", secondaryCategories: ["hidden"],
+      name: "Grand Bazaar: From Rooftops to the Secret Passages",
+      kicker: "Guided market and hidden-passage walk",
+      description: "Explore the Grand Bazaar district with a guide, discovering traditional shops, artisan workshops and historic courtyards. The experience includes rooftop access for a different perspective on the market.",
+      tip: "Check your chosen option for the meeting point, route and current inclusions. Itineraries may change.",
+      affiliateUrl: "https://www.getyourguide.com/istanbul-l56/tour-of-grand-bazaarfrom-rooftops-to-the-secret-passages-t643510/?partner_id=GTFXDFQ&utm_medium=online_publisher"
+    });
+  }
+  const matchesCategory = (place, category) => category === "all" || place.category === category || (place.secondaryCategories || []).includes(category);
+
   // Share the tower recommendation with its home neighbourhood and the Karaköy walking route.
   const galataTower = data.places.find(place => place.id === "galata-tower");
   if (galataTower && !data.places.some(place => place.id === "galata-tower-galata")) {
@@ -70,7 +88,7 @@
   }
 
   function renderCategories() {
-    const available = new Set(data.places.filter(place => place.side === state.side && place.area === state.area).map(place => place.category));
+    const available = new Set(data.places.filter(place => place.side === state.side && place.area === state.area).flatMap(place => [place.category, ...(place.secondaryCategories || [])]));
     if (state.category !== "all" && !available.has(state.category)) state.category = "all";
     categoryList.innerHTML = data.categories.filter(category => category.id === "all" || available.has(category.id)).map(category => {
       const selected = category.id === state.category;
@@ -90,7 +108,7 @@
     const matches = data.places.filter(place =>
       place.side === state.side &&
       place.area === state.area &&
-      (state.category === "all" || place.category === state.category)
+      matchesCategory(place, state.category)
     );
 
     const category = data.categories.find(item => item.id === state.category);
@@ -134,6 +152,7 @@
           <p>${escapeHtml(place.description)}</p>
           ${place.tip ? `<p class="place-tip"><strong>Local tip</strong> ${escapeHtml(place.tip)}</p>` : ""}
           ${towerBooking(place)}
+          ${place.affiliateUrl ? `<div class="affiliate-booking"><a class="place-source" href="${escapeHtml(place.affiliateUrl)}" target="_blank" rel="sponsored noopener noreferrer">Book this Grand Bazaar tour ↗</a><p><small>Affiliate link: TwoConts may earn a commission if you book through this link, at no extra cost to you.</small></p></div>` : ""}
           ${place.visitStatus === "closed" ? '<p class="place-visit-status"><strong>Currently closed</strong> — check reopening before visiting.</p>' : ""}
           ${place.sourceUrl ? `<a class="place-source" href="${escapeHtml(place.sourceUrl)}" target="_blank" rel="noopener noreferrer">Visitor information ↗</a>` : ""}
         </div>
