@@ -45,6 +45,22 @@
   const balatPhoto = data.places.find(place => place.id === "balat-colourful-houses");
   const newExperiences = [
     {
+      id: "uskudar-bosphorus-zipline", side: "asia", area: "uskudar", category: "bosphorus",
+      name: "Zipline Adventure with Bosphorus Views", kicker: "Nakkaştepe Park · Üsküdar",
+      description: "Ride a zipline over Nakkaştepe Park with views towards the Bosphorus and Istanbul’s skyline. The experience takes place within the park, with equipment and an orientation provided by the operator.",
+      tip: "Check current operating conditions, participant requirements and meeting instructions before booking.",
+      affiliateLabel: "Book the Nakkaştepe zipline",
+      affiliateUrl: "https://www.getyourguide.com/istanbul-l56/istanbul-zipline-with-bosphorus-view-t438955/?partner_id=GTFXDFQ&utm_medium=online_publisher"
+    },
+    {
+      id: "sultanahmet-sand-coffee-workshop", side: "europe", area: "sultanahmet", category: "cafes", secondaryCategories: ["culture"],
+      name: "Sand-Brewed Turkish Coffee Workshop", kicker: "A hands-on coffee experience in Sultanahmet",
+      description: "Learn how Turkish coffee is prepared using heated sand, explore its cultural significance and taste the finished coffee. A short workshop to pair with a day in the old city.",
+      tip: "The listed meeting point is Villa Sphendone Suites in Sultanahmet. Follow the venue and arrival instructions on your booking confirmation.",
+      affiliateLabel: "Book the Turkish coffee workshop",
+      affiliateUrl: "https://www.getyourguide.com/istanbul-l56/istanbul-sand-brewed-turkish-coffee-workshop-in-old-town-t980464/?partner_id=GTFXDFQ&utm_medium=online_publisher"
+    },
+    {
       id: "fener-balat-walking-tour", side: "europe", area: "balat", category: "culture", secondaryCategories: ["hidden"],
       name: "Fener & Balat Guided Walking Tour", kicker: "Historic streets and neighbourhood heritage",
       description: "Walk through Fener and Balat with a guide to explore colourful streets and the neighbourhoods’ Greek, Armenian, Jewish and Bulgarian heritage. Discover religious landmarks and the stories behind the area’s historic buildings.",
