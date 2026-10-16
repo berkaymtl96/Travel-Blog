@@ -38,6 +38,33 @@
     dolmabahce.affiliateLabel = "Book Dolmabahçe Palace & Harem tickets";
     dolmabahce.affiliateDescription = "This ticket option includes palace and Harem admission with an audio guide. Check the booking page for entry instructions and audio-guide collection requirements.";
   }
+  if (!data.sides.europe.areas.some(area => area.id === "laleli")) {
+    data.sides.europe.areas.push({ id: "laleli", label: "Laleli", note: "Old-city streets and a hammam pause" });
+  }
+  if (data.editorial) data.editorial.intros.laleli = "Laleli is part of Istanbul’s historic peninsula, west of the Grand Bazaar. Plan a Turkish bath experience here around your old-city sightseeing.";
+  const balatPhoto = data.places.find(place => place.id === "balat-colourful-houses");
+  const newExperiences = [
+    {
+      id: "fener-balat-walking-tour", side: "europe", area: "balat", category: "culture", secondaryCategories: ["hidden"],
+      name: "Fener & Balat Guided Walking Tour", kicker: "Historic streets and neighbourhood heritage",
+      description: "Walk through Fener and Balat with a guide to explore colourful streets and the neighbourhoods’ Greek, Armenian, Jewish and Bulgarian heritage. Discover religious landmarks and the stories behind the area’s historic buildings.",
+      tip: "Check the current meeting point and itinerary on your booking. Wear comfortable shoes for the neighbourhood’s slopes and follow visitor guidance at religious sites.",
+      image: balatPhoto && balatPhoto.image, imageAlt: "Colourful houses in Balat", photoCredit: balatPhoto && balatPhoto.photoCredit,
+      affiliateLabel: "Book the Fener & Balat walking tour",
+      affiliateUrl: "https://www.getyourguide.com/istanbul-l56/istanbul-fener-balat-half-day-guided-walking-tour-t454786/?partner_id=GTFXDFQ&utm_medium=online_publisher"
+    },
+    {
+      id: "laleli-private-turkish-bath", side: "europe", area: "laleli", category: "culture",
+      name: "Private Turkish Bath, Massage & Spa in the Old City", kicker: "A hammam experience in Laleli",
+      description: "Take a break from sightseeing with a Turkish bath experience featuring a body scrub and foam treatment. Massage options vary by package. Bath and massage rooms are private for your booking; sauna, steam room and waiting areas are shared.",
+      tip: "Check your selected package for the exact venue, treatment duration and what is included. Follow the provider’s preparation instructions.",
+      affiliateLabel: "Book the Turkish bath & spa experience",
+      affiliateUrl: "https://www.getyourguide.com/istanbul-l56/istanbul-private-turkish-bath-massage-and-spa-in-old-city-t593344/?partner_id=GTFXDFQ&utm_medium=online_publisher"
+    }
+  ];
+  newExperiences.forEach(experience => {
+    if (!data.places.some(place => place.id === experience.id)) data.places.push(experience);
+  });
   const matchesCategory = (place, category) => category === "all" || place.category === category || (place.secondaryCategories || []).includes(category);
 
   // Share the tower recommendation with its home neighbourhood and the Karaköy walking route.
