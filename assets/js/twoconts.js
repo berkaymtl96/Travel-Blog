@@ -2,6 +2,26 @@
   const data = window.TwoContsData;
   if (!data) return;
 
+  // Share the tower recommendation with its home neighbourhood and the Karaköy walking route.
+  const galataTower = data.places.find(place => place.id === "galata-tower");
+  if (galataTower && !data.places.some(place => place.id === "galata-tower-galata")) {
+    data.places.push({ ...galataTower, id: "galata-tower-galata", area: "galata",
+      description: "Explore Galata’s landmark tower and the surrounding hillside streets, with views over Istanbul from above.",
+      tip: "For the hosted-entry ticket below, follow the meeting instructions on your booking. Bring headphones and a charged phone for the audio guide." });
+  }
+
+  function towerBooking(place) {
+    if (!["galata-tower", "galata-tower-galata"].includes(place.id)) return "";
+    return `<div class="affiliate-booking">
+      <p class="place-kicker">BOOK AN EXPERIENCE</p>
+      <h4>Galata Tower Entry Ticket with Audio Guide</h4>
+      <p>Arrange hosted entry, then explore the tower at your own pace with an audio guide.</p>
+      <p class="place-tip"><strong>Before you book</strong> Follow the host meeting instructions; security queues still apply. Check current prices, availability and inclusions on GetYourGuide.</p>
+      <a class="place-source" href="https://www.getyourguide.com/istanbul-l56/istanbul-galata-tower-entry-ticket-with-audio-guide-t446343/?partner_id=GTFXDFQ&amp;utm_medium=online_publisher" target="_blank" rel="sponsored noopener noreferrer">Book Galata Tower tickets ↗</a>
+      <p><small>Affiliate link: TwoConts may earn a commission if you book through this link, at no extra cost to you.</small></p>
+    </div>`;
+  }
+
   const state = { side: "europe", area: "besiktas", category: "all" };
   const sideButtons = [...document.querySelectorAll("[data-side-choice]")];
   const areaList = document.querySelector("#area-list");
@@ -113,6 +133,7 @@
           <h3>${escapeHtml(place.name)}</h3>
           <p>${escapeHtml(place.description)}</p>
           ${place.tip ? `<p class="place-tip"><strong>Local tip</strong> ${escapeHtml(place.tip)}</p>` : ""}
+          ${towerBooking(place)}
           ${place.visitStatus === "closed" ? '<p class="place-visit-status"><strong>Currently closed</strong> — check reopening before visiting.</p>' : ""}
           ${place.sourceUrl ? `<a class="place-source" href="${escapeHtml(place.sourceUrl)}" target="_blank" rel="noopener noreferrer">Visitor information ↗</a>` : ""}
         </div>
