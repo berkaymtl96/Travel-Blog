@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="assets/css/twoconts.css?v=traveller-planner-20261027">
   <link rel="stylesheet" href="assets/css/twoconts-planner-20261027.css">
   <script src="assets/js/twoconts-data.js?v=traveller-planner-20261027" defer></script>
-  <script src="assets/js/twoconts-traveller-routefix-20261027.js" defer></script>
+  <script src="assets/js/twoconts-traveller-choicefix-20261027.js" defer></script>
 </head>
 <body class="tc-site" data-side="europe">
   <header class="tc-header">
@@ -112,10 +112,13 @@
           <div class="planner-choice-group">
             <p class="planner-label">Start on</p>
             <div class="planner-options" role="radiogroup" aria-label="Choose a side for your route">
-              <button type="button" class="planner-option is-selected" role="radio" aria-checked="true" data-plan-side="current">Follow my side</button>
-              <button type="button" class="planner-option" role="radio" aria-checked="false" data-plan-side="europe">European side</button>
+              <button type="button" class="planner-option is-selected" role="radio" aria-checked="true" data-plan-side="europe">European side</button>
               <button type="button" class="planner-option" role="radio" aria-checked="false" data-plan-side="asia">Asian side</button>
             </div>
+          </div>
+          <div class="planner-choice-group">
+            <p class="planner-label">Choose a neighbourhood</p>
+            <div class="planner-options" id="plan-area-options" role="radiogroup" aria-label="Choose a neighbourhood for your route"></div>
           </div>
           <div class="planner-choice-group">
             <p class="planner-label">I am in the mood for</p>
