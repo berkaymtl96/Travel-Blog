@@ -82,28 +82,9 @@
     if (!data.places.some(place => place.id === experience.id)) data.places.push(experience);
   });
   const matchesCategory = (place, category) => category === "all" || place.category === category || (place.secondaryCategories || []).includes(category);
-
-  // Share the tower recommendation with its home neighbourhood and the Karaköy walking route.
-  const galataTower = data.places.find(place => place.id === "galata-tower");
-  if (galataTower && !data.places.some(place => place.id === "galata-tower-galata")) {
-    data.places.push({ ...galataTower, id: "galata-tower-galata", area: "galata",
-      description: "Explore Galata’s landmark tower and the surrounding hillside streets, with views over Istanbul from above.",
-      tip: "For the hosted-entry ticket below, follow the meeting instructions on your booking. Bring headphones and a charged phone for the audio guide." });
-  }
-
-  function towerBooking(place) {
-    if (!["galata-tower", "galata-tower-galata"].includes(place.id)) return "";
-    return `<div class="affiliate-booking">
-      <p class="place-kicker">BOOK AN EXPERIENCE</p>
-      <h4>Galata Tower Entry Ticket with Audio Guide</h4>
-      <p>Arrange hosted entry, then explore the tower at your own pace with an audio guide.</p>
-      <p class="place-tip"><strong>Before you book</strong> Follow the host meeting instructions; security queues still apply. Check current prices, availability and inclusions on GetYourGuide.</p>
-      <a class="place-source" href="https://www.getyourguide.com/istanbul-l56/istanbul-galata-tower-entry-ticket-with-audio-guide-t446343/?partner_id=GTFXDFQ&amp;utm_medium=online_publisher" target="_blank" rel="sponsored noopener noreferrer">Book Galata Tower tickets ↗</a>
-      <p><small>Affiliate link: TwoConts may earn a commission if you book through this link, at no extra cost to you.</small></p>
-    </div>`;
-  }
-
   const state = { side: "europe", area: "besiktas", category: "all" };
+  const plannerState = { side: "current", category: "all", time: "half" };
+  const storageKey = "twoconts-saved-places-v1";
   const sideButtons = [...document.querySelectorAll("[data-side-choice]")];
   const areaList = document.querySelector("#area-list");
   const categoryList = document.querySelector("#category-list");
@@ -113,19 +94,90 @@
   const areaDescription = document.querySelector("#area-description");
   const selectionText = document.querySelector("#selection-text");
   const countText = document.querySelector("#collection-count");
+  const planResult = document.querySelector("#plan-result");
+  const savedList = document.querySelector("#saved-list");
 
   const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
   })[character]);
 
-  const currentSide = () => data.sides[state.side];
-  const currentArea = () => currentSide().areas.find(area => area.id === state.area);
+  function getSavedIds() {
+    try {
+      const parsed = JSON.parse(window.localStorage.getItem(storageKey) || "[]");
+      return new Set(Array.isArray(parsed) ? parsed.filter(id => data.places.some(place => place.id === id)) : []);
+    } catch (error) {
+      return new Set();
+    }
+  }
+
+  const savedIds = getSavedIds();
+
+  function persistSavedIds() {
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify([...savedIds]));
+    } catch (error) {
+      return;
+    }
+  }
+
+  function currentSide() {
+    return data.sides[state.side];
+  }
+
+  function currentArea() {
+    return currentSide().areas.find(area => area.id === state.area);
+  }
+
+  function labelForCategory(categoryId) {
+    const category = data.categories.find(item => item.id === categoryId);
+    return category ? category.label : "Everything";
+  }
+
+  function mapsUrl(place, areaLabel) {
+    return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(place.name + ", " + areaLabel + ", Istanbul");
+  }
+
+  function updateSavedCount() {
+    document.querySelectorAll("[data-saved-count]").forEach(node => {
+      node.textContent = String(savedIds.size);
+      node.closest("a") && node.closest("a").setAttribute("aria-label", savedIds.size ? "My list, " + savedIds.size + " saved places" : "My list");
+    });
+  }
+
+  function syncStateFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const requestedSide = params.get("side");
+    if (requestedSide && data.sides[requestedSide]) state.side = requestedSide;
+    const requestedArea = params.get("area");
+    if (requestedArea && data.sides[state.side].areas.some(area => area.id === requestedArea)) {
+      state.area = requestedArea;
+    } else {
+      state.area = data.sides[state.side].areas[0].id;
+    }
+    const requestedCategory = params.get("category");
+    if (requestedCategory && data.categories.some(category => category.id === requestedCategory)) state.category = requestedCategory;
+  }
+
+  function syncUrl() {
+    const url = new URL(window.location.href);
+    if (state.side === "europe" && state.area === "besiktas" && state.category === "all") {
+      url.searchParams.delete("side");
+      url.searchParams.delete("area");
+      url.searchParams.delete("category");
+    } else {
+      url.searchParams.set("side", state.side);
+      url.searchParams.set("area", state.area);
+      if (state.category === "all") url.searchParams.delete("category");
+      else url.searchParams.set("category", state.category);
+    }
+    window.history.replaceState({}, "", url);
+  }
 
   function renderSideButtons() {
     sideButtons.forEach(button => {
       const selected = button.dataset.sideChoice === state.side;
       button.classList.toggle("is-selected", selected);
-      button.setAttribute("aria-pressed", String(selected));
+      button.setAttribute("aria-checked", String(selected));
     });
     document.body.dataset.side = state.side;
   }
@@ -134,16 +186,15 @@
     const side = currentSide();
     areaList.innerHTML = side.areas.map(area => {
       const selected = area.id === state.area;
-      return `<button class="area-card${selected ? " is-selected" : ""}" type="button" data-area="${area.id}" aria-pressed="${selected}">
-        <span class="area-number">${String(side.areas.indexOf(area) + 1).padStart(2, "0")}</span>
-        <strong>${area.label}</strong>
-        <small>${area.note}</small>
-      </button>`;
+      return '<button class="area-card' + (selected ? ' is-selected' : '') + '" type="button" role="radio" data-area="' + escapeHtml(area.id) + '" aria-checked="' + selected + '">' +
+        '<span class="area-number">' + String(side.areas.indexOf(area) + 1).padStart(2, "0") + '</span>' +
+        '<strong>' + escapeHtml(area.label) + '</strong><small>' + escapeHtml(area.note) + '</small></button>';
     }).join("");
 
     areaList.querySelectorAll("[data-area]").forEach(button => {
       button.addEventListener("click", () => {
         state.area = button.dataset.area;
+        state.category = "all";
         render();
         document.querySelector("#recommendations").scrollIntoView({ behavior: "smooth", block: "start" });
       });
@@ -155,7 +206,7 @@
     if (state.category !== "all" && !available.has(state.category)) state.category = "all";
     categoryList.innerHTML = data.categories.filter(category => category.id === "all" || available.has(category.id)).map(category => {
       const selected = category.id === state.category;
-      return `<button class="category-pill${selected ? " is-selected" : ""}" type="button" data-category="${category.id}" aria-pressed="${selected}">${category.label}</button>`;
+      return '<button class="category-pill' + (selected ? ' is-selected' : '') + '" type="button" role="radio" data-category="' + escapeHtml(category.id) + '" aria-checked="' + selected + '">' + escapeHtml(category.label) + '</button>';
     }).join("");
 
     categoryList.querySelectorAll("[data-category]").forEach(button => {
@@ -166,63 +217,67 @@
     });
   }
 
+  function photoCreditMarkup(place) {
+    if (!place.photoCredit) return "";
+    const credit = place.photoCredit;
+    let markup = '<div class="photo-credit"><a href="' + escapeHtml(credit.url) + '" target="_blank" rel="noopener noreferrer">Photo: ' + escapeHtml(credit.label) + '</a>';
+    if (credit.licenseUrl) markup += ' · <a href="' + escapeHtml(credit.licenseUrl) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(credit.license) + '</a>';
+    else if (credit.license) markup += ' · ' + escapeHtml(credit.license);
+    if (credit.changes) markup += '<br>' + escapeHtml(credit.changes);
+    return markup + '</div>';
+  }
+
+  function towerBooking(place) {
+    if (!["galata-tower", "galata-tower-galata"].includes(place.id)) return "";
+    return '<div class="affiliate-booking"><p class="place-kicker">BOOK AN EXPERIENCE</p><h4>Galata Tower Entry Ticket with Audio Guide</h4><p>Arrange hosted entry, then explore the tower at your own pace with an audio guide.</p><p class="place-tip"><strong>Before you book</strong> Follow the host meeting instructions; security queues still apply. Check current prices, availability and inclusions on GetYourGuide.</p><a class="place-source" href="https://www.getyourguide.com/istanbul-l56/istanbul-galata-tower-entry-ticket-with-audio-guide-t446343/?partner_id=GTFXDFQ&amp;utm_medium=online_publisher" target="_blank" rel="sponsored noopener noreferrer">Book Galata Tower tickets ↗</a><p><small>Affiliate link: TwoConts may earn a commission if you book through this link, at no extra cost to you.</small></p></div>';
+  }
+
+  function placeActionsMarkup(place, area) {
+    const isSaved = savedIds.has(place.id);
+    return '<div class="place-actions"><a class="place-map" href="' + mapsUrl(place, area.label) + '" target="_blank" rel="noopener noreferrer">Open in Maps ↗</a>' +
+      '<button class="save-place' + (isSaved ? ' is-saved' : '') + '" type="button" data-save-place="' + escapeHtml(place.id) + '" aria-pressed="' + isSaved + '">' + (isSaved ? 'Saved to my list' : 'Save place') + '</button></div>';
+  }
+
+  function bindSaveButtons(scope) {
+    scope.querySelectorAll("[data-save-place]").forEach(button => {
+      button.addEventListener("click", () => {
+        const id = button.dataset.savePlace;
+        if (savedIds.has(id)) savedIds.delete(id);
+        else savedIds.add(id);
+        persistSavedIds();
+        updateSavedCount();
+        renderSaved();
+        renderPlaces();
+        renderPlanner();
+      });
+    });
+  }
+
   function renderPlaces() {
     const area = currentArea();
-    const matches = data.places.filter(place =>
-      place.side === state.side &&
-      place.area === state.area &&
-      matchesCategory(place, state.category)
-    );
-
-    const category = data.categories.find(item => item.id === state.category);
-    selectionText.textContent = state.category === "all"
-      ? `${area.label}, ${currentSide().shortLabel}`
-      : `${area.label} · ${category.label}`;
-
-    countText.textContent = matches.length
-      ? `${matches.length} TwoConts pick${matches.length === 1 ? "" : "s"}`
-      : "Collection in progress";
+    const matches = data.places.filter(place => place.side === state.side && place.area === state.area && matchesCategory(place, state.category));
+    selectionText.textContent = state.category === "all" ? area.label + ", " + currentSide().shortLabel : area.label + " · " + labelForCategory(state.category);
+    countText.textContent = matches.length ? matches.length + " considered stop" + (matches.length === 1 ? "" : "s") : "Collection in progress";
 
     if (!matches.length) {
-      placesGrid.innerHTML = `<article class="empty-card">
-        <p class="eyebrow">CURATED, NOT CROWDED</p>
-        <h3>No ${escapeHtml(category.label.toLowerCase())} picks here yet.</h3>
-        <p>Try Everything to see the places in this neighbourhood, or choose another category.</p>
-        <span class="empty-rule"></span>
-      </article>`;
+      placesGrid.innerHTML = '<article class="empty-card"><p class="eyebrow">CURATED, NOT CROWDED</p><h3>No ' + escapeHtml(labelForCategory(state.category).toLowerCase()) + ' picks here yet.</h3><p>Try Everything to see the places in this neighbourhood, or choose another category.</p><span class="empty-rule"></span></article>';
       return;
     }
 
     const summary = data.editorial && data.editorial.categorySummaries[state.category];
-    const summaryMarkup = state.category !== "all" && summary ? `<div class="category-introduction"><h3>${escapeHtml(category.label)}</h3><p>${escapeHtml(summary)}</p></div>` : "";
+    const summaryMarkup = state.category !== "all" && summary ? '<div class="category-introduction"><h3>' + escapeHtml(labelForCategory(state.category)) + '</h3><p>' + escapeHtml(summary) + '</p></div>' : "";
     placesGrid.innerHTML = summaryMarkup + matches.map(place => {
-      const imageStyle = place.image ? ` style="background-image:url('${escapeHtml(place.image)}')"` : "";
-      const imageAlt = escapeHtml(place.imageAlt || place.name);
-      const photoCredit = place.photoCredit
-        ? `<div class="photo-credit"><a href="${escapeHtml(place.photoCredit.url)}" target="_blank" rel="noopener noreferrer">Photo: ${escapeHtml(place.photoCredit.label)}</a>${place.photoCredit.licenseUrl ? ` · <a href="${escapeHtml(place.photoCredit.licenseUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(place.photoCredit.license)}</a>` : place.photoCredit.license ? ` · ${escapeHtml(place.photoCredit.license)}` : ""}${place.photoCredit.changes ? `<br>${escapeHtml(place.photoCredit.changes)}` : ""}</div>`
-        : "";
-
-      return `<article class="place-card">
-        ${place.image ? `<div class="place-image"${imageStyle} role="img" aria-label="${imageAlt}">
-          <span>${escapeHtml(place.category)}</span>
-          ${photoCredit}
-        </div>` : ""}
-
-        <div class="place-copy">
-          ${place.imageCaption ? `<p class="image-caption">${escapeHtml(place.imageCaption)}</p>` : ""}
-          <p class="place-kicker">${escapeHtml(place.kicker || area.label)}</p>
-          <h3>${escapeHtml(place.name)}</h3>
-          <p>${escapeHtml(place.description)}</p>
-          ${place.tip ? `<p class="place-tip"><strong>Local tip</strong> ${escapeHtml(place.tip)}</p>` : ""}
-          ${towerBooking(place)}
-          ${place.affiliateUrl ? `<div class="affiliate-booking">${place.affiliateDescription ? `<p>${escapeHtml(place.affiliateDescription)}</p>` : ""}<a class="place-source" href="${escapeHtml(place.affiliateUrl)}" target="_blank" rel="sponsored noopener noreferrer">${escapeHtml(place.affiliateLabel || "Book this Grand Bazaar tour")} ↗</a><p><small>Affiliate link: TwoConts may earn a commission if you book through this link, at no extra cost to you.</small></p></div>` : ""}
-          ${place.visitStatus === "closed" ? '<p class="place-visit-status"><strong>Currently closed</strong> — check reopening before visiting.</p>' : ""}
-          ${place.sourceUrl ? `<a class="place-source" href="${escapeHtml(place.sourceUrl)}" target="_blank" rel="noopener noreferrer">Visitor information ↗</a>` : ""}
-        </div>
-      </article>`;
+      const imageStyle = place.image ? ' style="background-image:url(&quot;' + escapeHtml(place.image) + '&quot;)"' : "";
+      const image = place.image ? '<div class="place-image"' + imageStyle + ' role="img" aria-label="' + escapeHtml(place.imageAlt || place.name) + '"><span>' + escapeHtml(place.category) + '</span>' + photoCreditMarkup(place) + '</div>' : "";
+      const caption = place.imageCaption ? '<p class="image-caption">' + escapeHtml(place.imageCaption) + '</p>' : "";
+      const tip = place.tip ? '<p class="place-tip"><strong>Local tip</strong> ' + escapeHtml(place.tip) + '</p>' : "";
+      const booking = place.affiliateUrl ? '<div class="affiliate-booking">' + (place.affiliateDescription ? '<p>' + escapeHtml(place.affiliateDescription) + '</p>' : "") + '<a class="place-source" href="' + escapeHtml(place.affiliateUrl) + '" target="_blank" rel="sponsored noopener noreferrer">' + escapeHtml(place.affiliateLabel || "Check this experience") + ' ↗</a><p><small>Affiliate link: TwoConts may earn a commission if you book through this link, at no extra cost to you.</small></p></div>' : "";
+      const status = place.visitStatus === "closed" ? '<p class="place-visit-status"><strong>Currently closed</strong> — check reopening before visiting.</p>' : "";
+      const source = place.sourceUrl ? '<a class="place-source" href="' + escapeHtml(place.sourceUrl) + '" target="_blank" rel="noopener noreferrer">Visitor information ↗</a>' : "";
+      return '<article class="place-card">' + image + '<div class="place-copy">' + caption + '<p class="place-kicker">' + escapeHtml(place.kicker || area.label) + '</p><h3>' + escapeHtml(place.name) + '</h3><p>' + escapeHtml(place.description) + '</p>' + tip + towerBooking(place) + booking + status + source + placeActionsMarkup(place, area) + '</div></article>';
     }).join("");
+    bindSaveButtons(placesGrid);
   }
-
 
   function renderFoodTour() {
     let section = document.querySelector("#food-tour");
@@ -234,24 +289,112 @@
       section.setAttribute("aria-label", "Book a food tour");
       placesGrid.after(section);
     }
-    section.style.display = (!["karakoy", "kadikoy"].includes(state.area) ||
-      !["all", "food"].includes(state.category)) ? "none" : "";
-    section.innerHTML = `<div class="place-copy">
-      <p class="place-kicker">FOOD EXPERIENCE · KARAKÖY &amp; KADIKÖY</p>
-      <h3>Taste of Istanbul: Street Food &amp; Culture</h3>
-      <p>Explore street food in Karaköy, cross to Kadıköy by ferry, and discover local markets with a guide.</p>
-      <p class="place-tip"><strong>Before you book</strong> Food, drinks and transport are not included in the tour price. Check the listing for current options and meeting details.</p>
-      <a class="nav-outline" href="https://www.getyourguide.com/istanbul-l56/taste-of-istanbul-food-tour-street-food-culture-t1361409/?partner_id=GTFXDFQ&amp;utm_medium=online_publisher" target="_blank" rel="sponsored noopener noreferrer">Check availability on GetYourGuide ↗</a>
-      <p><small>Affiliate link: TwoConts may earn a commission if you book through this link, at no extra cost to you.</small></p>
-    </div>`;
+    section.style.display = (!["karakoy", "kadikoy"].includes(state.area) || !["all", "food"].includes(state.category)) ? "none" : "";
+    section.innerHTML = '<div class="place-copy"><p class="place-kicker">FOOD EXPERIENCE · KARAKÖY &amp; KADIKÖY</p><h3>Taste of Istanbul: Street Food &amp; Culture</h3><p>Explore street food in Karaköy, cross to Kadıköy by ferry, and discover local markets with a guide.</p><p class="place-tip"><strong>Before you book</strong> Food, drinks and transport are not included in the tour price. Check the listing for current options and meeting details.</p><a class="nav-outline" href="https://www.getyourguide.com/istanbul-l56/taste-of-istanbul-food-tour-street-food-culture-t1361409/?partner_id=GTFXDFQ&amp;utm_medium=online_publisher" target="_blank" rel="sponsored noopener noreferrer">Check availability on GetYourGuide ↗</a><p><small>Affiliate link: TwoConts may earn a commission if you book through this link, at no extra cost to you.</small></p></div>';
   }
 
   function renderIntroduction() {
     const side = currentSide();
     const area = currentArea();
     areaEyebrow.textContent = side.eyebrow;
-    areaTitle.textContent = `${area.label}, at your pace.`;
+    areaTitle.textContent = area.label + ", at your pace.";
     areaDescription.textContent = (data.editorial && data.editorial.intros[state.area]) || side.intro;
+  }
+
+  function renderSaved() {
+    if (!savedList) return;
+    const savedPlaces = data.places.filter(place => savedIds.has(place.id));
+    if (!savedPlaces.length) {
+      savedList.innerHTML = '<div class="saved-empty"><p class="eyebrow">NOTHING SAVED YET</p><h3>See something you would make time for?</h3><p>Use “Save place” on any recommendation to keep it here for later.</p></div>';
+      return;
+    }
+    savedList.innerHTML = '<div class="saved-actions"><p>' + savedPlaces.length + ' saved place' + (savedPlaces.length === 1 ? "" : "s") + ' for your Istanbul list.</p><div><button type="button" class="text-button" data-share-saved>Share my list</button><button type="button" class="text-button" data-clear-saved>Clear list</button></div></div><div class="saved-grid">' + savedPlaces.map(place => {
+      const area = data.sides[place.side].areas.find(item => item.id === place.area);
+      return '<article class="saved-card"><p class="place-kicker">' + escapeHtml(area ? area.label : "Istanbul") + '</p><h3>' + escapeHtml(place.name) + '</h3><p>' + escapeHtml(place.kicker || "A TwoConts pick") + '</p><div class="place-actions"><a class="place-map" href="' + mapsUrl(place, area ? area.label : "Istanbul") + '" target="_blank" rel="noopener noreferrer">Open in Maps ↗</a><button class="save-place is-saved" type="button" data-save-place="' + escapeHtml(place.id) + '" aria-pressed="true">Remove</button></div></article>';
+    }).join("") + '</div>';
+    bindSaveButtons(savedList);
+    const clearButton = savedList.querySelector("[data-clear-saved]");
+    if (clearButton) clearButton.addEventListener("click", () => {
+      savedIds.clear();
+      persistSavedIds();
+      updateSavedCount();
+      renderSaved();
+      renderPlaces();
+      renderPlanner();
+    });
+    const shareButton = savedList.querySelector("[data-share-saved]");
+    if (shareButton) shareButton.addEventListener("click", async () => {
+      const text = "My TwoConts Istanbul list: " + savedPlaces.map(place => place.name).join(", ") + ".";
+      const url = window.location.href;
+      try {
+        if (navigator.share) await navigator.share({ title: "My TwoConts Istanbul list", text, url });
+        else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(text + " " + url);
+          shareButton.textContent = "List copied";
+          window.setTimeout(() => { shareButton.textContent = "Share my list"; }, 1800);
+        }
+      } catch (error) {
+        return;
+      }
+    });
+  }
+
+  function renderPlanner() {
+    document.querySelectorAll("[data-plan-side]").forEach(button => {
+      const selected = button.dataset.planSide === plannerState.side;
+      button.classList.toggle("is-selected", selected);
+      button.setAttribute("aria-checked", String(selected));
+    });
+    document.querySelectorAll("[data-plan-category]").forEach(button => {
+      const selected = button.dataset.planCategory === plannerState.category;
+      button.classList.toggle("is-selected", selected);
+      button.setAttribute("aria-checked", String(selected));
+    });
+    document.querySelectorAll("[data-plan-time]").forEach(button => {
+      const selected = button.dataset.planTime === plannerState.time;
+      button.classList.toggle("is-selected", selected);
+      button.setAttribute("aria-checked", String(selected));
+    });
+  }
+
+  function pickPlanArea(side, category) {
+    const candidates = data.sides[side].areas.map(area => {
+      const matches = data.places.filter(place => place.side === side && place.area === area.id && matchesCategory(place, category));
+      return { area, matches };
+    }).filter(candidate => candidate.matches.length);
+    if (!candidates.length && category !== "all") return pickPlanArea(side, "all");
+    const current = candidates.find(candidate => side === state.side && candidate.area.id === state.area);
+    if (current) return current;
+    return candidates.sort((a, b) => b.matches.length - a.matches.length)[0];
+  }
+
+  function planDirectionsUrl(stops, area) {
+    const destination = stops[stops.length - 1];
+    const url = new URL("https://www.google.com/maps/dir/");
+    url.searchParams.set("api", "1");
+    url.searchParams.set("destination", destination.name + ", " + area.label + ", Istanbul");
+    if (stops.length > 1) url.searchParams.set("waypoints", stops.slice(0, -1).map(place => place.name + ", " + area.label + ", Istanbul").join("|"));
+    return url.toString();
+  }
+
+  function buildPlan() {
+    const side = plannerState.side === "current" ? state.side : plannerState.side;
+    let category = plannerState.category;
+    let choice = pickPlanArea(side, category);
+    if (!choice) {
+      planResult.innerHTML = '<p class="plan-placeholder">We are still building this part of the guide. Try another interest or side.</p>';
+      return;
+    }
+    if (!choice.matches.length && category !== "all") {
+      category = "all";
+      choice = pickPlanArea(side, category);
+    }
+    const stopsByTime = { short: 2, half: 3, full: 4 };
+    const stops = choice.matches.slice(0, stopsByTime[plannerState.time]);
+    const timeLabel = { short: "a couple of hours", half: "a half day", full: "a full day" }[plannerState.time];
+    const categoryLabel = category === "all" ? "a little of everything" : labelForCategory(category).toLowerCase();
+    planResult.innerHTML = '<article class="route-card"><p class="eyebrow">YOUR ' + escapeHtml(timeLabel.toUpperCase()) + ' IN ' + escapeHtml(choice.area.label.toUpperCase()) + '</p><h3>' + escapeHtml(choice.area.label) + ', at your pace.</h3><p>Start with ' + escapeHtml(categoryLabel) + ' and keep the whole route in one walkable neighbourhood.</p><ol class="route-stops">' + stops.map((place, index) => '<li><span>' + String(index + 1).padStart(2, "0") + '</span><div><h4>' + escapeHtml(place.name) + '</h4><p>' + escapeHtml(place.kicker || choice.area.label) + '</p><div class="route-actions"><a href="' + mapsUrl(place, choice.area.label) + '" target="_blank" rel="noopener noreferrer">Map stop ↗</a><button type="button" data-save-place="' + escapeHtml(place.id) + '" aria-pressed="' + savedIds.has(place.id) + '">' + (savedIds.has(place.id) ? "Saved" : "Save") + '</button></div></div></li>').join("") + '</ol><div class="route-footer"><a class="route-map" href="' + planDirectionsUrl(stops, choice.area) + '" target="_blank" rel="noopener noreferrer">Open this route in Maps ↗</a><p>Check current opening details before you go.</p></div></article>';
+    bindSaveButtons(planResult);
   }
 
   function render() {
@@ -261,6 +404,10 @@
     renderCategories();
     renderPlaces();
     renderFoodTour();
+    renderPlanner();
+    renderSaved();
+    updateSavedCount();
+    syncUrl();
   }
 
   sideButtons.forEach(button => {
@@ -275,6 +422,21 @@
     });
   });
 
+  document.querySelectorAll("[data-plan-side]").forEach(button => button.addEventListener("click", () => {
+    plannerState.side = button.dataset.planSide;
+    renderPlanner();
+  }));
+  document.querySelectorAll("[data-plan-category]").forEach(button => button.addEventListener("click", () => {
+    plannerState.category = button.dataset.planCategory;
+    renderPlanner();
+  }));
+  document.querySelectorAll("[data-plan-time]").forEach(button => button.addEventListener("click", () => {
+    plannerState.time = button.dataset.planTime;
+    renderPlanner();
+  }));
+  const buildButton = document.querySelector("[data-plan-build]");
+  if (buildButton) buildButton.addEventListener("click", buildPlan);
+
   const menuButton = document.querySelector(".menu-toggle");
   const menu = document.querySelector(".site-nav");
   if (menuButton && menu) {
@@ -284,8 +446,15 @@
     });
   }
 
+  window.addEventListener("popstate", () => {
+    syncStateFromUrl();
+    render();
+  });
+
+  syncStateFromUrl();
   render();
 })();
+
 (() => {
   const frame = document.querySelector(".hero-slideshow");
   if (!frame) return;
