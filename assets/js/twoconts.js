@@ -83,7 +83,7 @@
   });
   const matchesCategory = (place, category) => category === "all" || place.category === category || (place.secondaryCategories || []).includes(category);
   const state = { side: "europe", area: "besiktas", category: "all" };
-  const plannerState = { side: "current", category: "all", time: "half" };
+  const plannerState = { side: "europe", area: "auto", category: "all", time: "half" };
   const storageKey = "twoconts-saved-places-v1";
   const sideButtons = [...document.querySelectorAll("[data-side-choice]")];
   const areaList = document.querySelector("#area-list");
@@ -345,6 +345,17 @@
       button.classList.toggle("is-selected", selected);
       button.setAttribute("aria-checked", String(selected));
     });
+    const planAreaOptions = document.querySelector("#plan-area-options");
+    if (planAreaOptions) {
+      const side = data.sides[plannerState.side];
+      planAreaOptions.innerHTML = '<button type="button" class="planner-option' + (plannerState.area === "auto" ? ' is-selected' : '') + '" role="radio" aria-checked="' + (plannerState.area === "auto") + '" data-plan-area="auto">Let TwoConts choose</button>' + side.areas.map(area => '<button type="button" class="planner-option' + (plannerState.area === area.id ? ' is-selected' : '') + '" role="radio" aria-checked="' + (plannerState.area === area.id) + '" data-plan-area="' + escapeHtml(area.id) + '">' + escapeHtml(area.label) + '</button>').join("");
+      planAreaOptions.querySelectorAll("[data-plan-area]").forEach(button => {
+        button.addEventListener("click", () => {
+          plannerState.area = button.dataset.planArea;
+          renderPlanner();
+        });
+      });
+    }
     document.querySelectorAll("[data-plan-category]").forEach(button => {
       const selected = button.dataset.planCategory === plannerState.category;
       button.classList.toggle("is-selected", selected);
@@ -362,7 +373,13 @@
       const matches = data.places.filter(place => place.side === side && place.area === area.id && matchesCategory(place, category));
       return { area, matches };
     }).filter(candidate => candidate.matches.length);
+    if (plannerState.area !== "auto") {
+      const selected = candidates.find(candidate => candidate.area.id === plannerState.area);
+      if (selected) return selected;
+      if (category !== "all") return pickPlanArea(side, "all");
+    }
     if (!candidates.length && category !== "all") return pickPlanArea(side, "all");
+    if (!candidates.length) return null;
     const current = candidates.find(candidate => side === state.side && candidate.area.id === state.area);
     if (current) return current;
     return candidates.sort((a, b) => b.matches.length - a.matches.length)[0];
@@ -378,7 +395,7 @@
   }
 
   function buildPlan() {
-    const side = plannerState.side === "current" ? state.side : plannerState.side;
+    const side = plannerState.side;
     let category = plannerState.category;
     let choice = pickPlanArea(side, category);
     if (!choice) {
@@ -393,8 +410,12 @@
     const stops = choice.matches.slice(0, stopsByTime[plannerState.time]);
     const timeLabel = { short: "a couple of hours", half: "a half day", full: "a full day" }[plannerState.time];
     const categoryLabel = category === "all" ? "a little of everything" : labelForCategory(category).toLowerCase();
-    planResult.innerHTML = '<article class="route-card"><p class="eyebrow">YOUR ' + escapeHtml(timeLabel.toUpperCase()) + ' IN ' + escapeHtml(choice.area.label.toUpperCase()) + '</p><h3>' + escapeHtml(choice.area.label) + ', at your pace.</h3><p>Start with ' + escapeHtml(categoryLabel) + ' and keep the route focused on one part of the city.</p><ol class="route-stops">' + stops.map((place, index) => '<li><span>' + String(index + 1).padStart(2, "0") + '</span><div><h4>' + escapeHtml(place.name) + '</h4><p>' + escapeHtml(place.kicker || choice.area.label) + '</p><div class="route-actions"><a href="' + mapsUrl(place, choice.area.label) + '" target="_blank" rel="noopener noreferrer">Map stop ↗</a><button type="button" data-save-place="' + escapeHtml(place.id) + '" aria-pressed="' + savedIds.has(place.id) + '">' + (savedIds.has(place.id) ? "Saved" : "Save") + '</button></div></div></li>').join("") + '</ol><div class="route-footer"><a class="route-map" href="' + planDirectionsUrl(stops, choice.area) + '" target="_blank" rel="noopener noreferrer">Open this route in Maps ↗</a><p>Check current opening details before you go.</p></div></article>';
+    planResult.innerHTML = '<article class="route-card"><p class="eyebrow">YOUR ' + escapeHtml(timeLabel.toUpperCase()) + ' IN ' + escapeHtml(choice.area.label.toUpperCase()) + '</p><h3>' + escapeHtml(choice.area.label) + ', at your pace.</h3><p>Start with ' + escapeHtml(categoryLabel) + ' and keep the route focused on one part of the city.</p><ol class="route-stops">' + stops.map((place, index) => '<li><span>' + String(index + 1).padStart(2, "0") + '</span><div><h4>' + escapeHtml(place.name) + '</h4><p>' + escapeHtml(place.kicker || choice.area.label) + '</p><div class="route-actions"><a href="' + mapsUrl(place, choice.area.label) + '" target="_blank" rel="noopener noreferrer">Map stop ↗</a><button type="button" data-save-place="' + escapeHtml(place.id) + '" aria-pressed="' + savedIds.has(place.id) + '">' + (savedIds.has(place.id) ? "Saved" : "Save") + '</button></div></div></li>').join("") + '</ol><div class="route-footer"><a class="route-map" href="' + planDirectionsUrl(stops, choice.area) + '" target="_blank" rel="noopener noreferrer">Open this route in Maps ↗</a><button type="button" class="text-button" data-edit-route>Change this route</button><p>Check current opening details before you go.</p></div></article>';
     bindSaveButtons(planResult);
+    const editRouteButton = planResult.querySelector("[data-edit-route]");
+    if (editRouteButton) editRouteButton.addEventListener("click", () => {
+      document.querySelector("#plan").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
     planResult.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
@@ -425,6 +446,7 @@
 
   document.querySelectorAll("[data-plan-side]").forEach(button => button.addEventListener("click", () => {
     plannerState.side = button.dataset.planSide;
+    plannerState.area = "auto";
     renderPlanner();
   }));
   document.querySelectorAll("[data-plan-category]").forEach(button => button.addEventListener("click", () => {
